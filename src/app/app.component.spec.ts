@@ -49,7 +49,7 @@ describe('AppComponent', () => {
 
   // INYECCIÓN Y ASINCRONÍAS
 
-  it(`shouldn\'t display the user name if not called async`, async(() => {
+  it(`should fetch data sucessfully if called asynchronously`, async(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     const dataService = fixture.debugElement.injector.get(DataService);
@@ -64,7 +64,7 @@ describe('AppComponent', () => {
     });
   }));
 
-  it(`shouldn\'t display the user name if not called fake-async`, fakeAsync(() => {
+  it(`should fetch data sucessfully if called fake-async`, fakeAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     const dataService = fixture.debugElement.injector.get(DataService);
