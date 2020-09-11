@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
@@ -47,6 +47,8 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('p').textContent).toContain(app.user.name);
   });
 
+  // INYECCIÓN Y ASINCRONÍAS
+
   it(`shouldn\'t display the user name if not called async`, async(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
@@ -60,5 +62,19 @@ describe('AppComponent', () => {
     fixture.whenStable().then(() => {
       expect(app.data).toBe('Data');
     });
+  }));
+
+  it(`shouldn\'t display the user name if not called fake-async`, fakeAsync(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    const dataService = fixture.debugElement.injector.get(DataService);
+    // Retornar nuestros propios datos y no el resultante de una tarea asíncrona
+    // aunque se resuelva istantáneamente seguimos tratando bajo la asincronía
+    const spy = spyOn(dataService, 'getDetails').and.returnValue(Promise.resolve('Data'));
+    fixture.detectChanges();
+
+    // Utilizar un tick para continuar
+    tick();
+    expect(app.data).toBe('Data');
   }));
 });
